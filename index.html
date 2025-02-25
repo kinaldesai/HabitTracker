@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- this is the Sign-In Section -->
+    <div id="sign-in-container">
+        <h2>Welcome to Habit Tracker</h2>
+        <button id="sign-in-button">Sign in with Google</button>  <!-- this is the sign in button -->
+    </div>
+
+    <div id="app-container" style="display: none;">
+        <section id="habit-tracker">
+            <h1 id="habitTrackersTitle">Habit Tracker</h1>
+            <input type="text" id="habitInput" placeholder="Add a new habit...">
+            <button id="addHabitButton">Add Habit</button>
+            <div id="habitList"></div>
+            <p id="emptyMessages" style="display: none;">No habits found yet.!</p>
+        </section>
+
+        <!-- AI Chatbot -->
+        <section id="ai-chat" style="display: none;">
+            <h2>Chat with AI</h2>
+            <div id="chatBox" class="message-container"></div>
+            <input type="text" id="userInput" placeholder="Ask Me Anything" autocomplete="on">
+            <button id="sendButton">Send</button>
+        </section>
+    </div>
+
+    <button id="aiChatBtn" class="ai-chat-btn" style="display: none;">Chat</button>
+
+    <!-- Biometric -->
+    <button id="startAuth" style="display: none;">Authenticate with Biometrics</button>
+    <p id="status"></p>
+
+    <!-- Sign Out -->
+    <button id="sign-out-button" style="display: none;">Sign Out</button>
+
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js"></script>
+    
+    <script type="module" src="sign-in.js"></script>  <!-- sign in javascript -->
+    <script type="module" src="script.js"></script>  <!-- script javascript -->
+    <script type="module" src="biometric.js"></script>   <!-- biometric javascript -->
+</body>
+
+</html>
