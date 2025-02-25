@@ -18,38 +18,52 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // DOM Elements
-const signInButtons = document.getElementById('sign-in-button'); //sign in button
-const signOutButtons = document.getElementById('sign-out-button'); //sign out button
-const signInContainers = document.getElementById('sign-in-container'); //sign in container
-const appContainer = document.getElementById('app-container'); //this is the app container
-const aiChatButton = document.getElementById('aiChatBtn'); //this is ai chat button
-const startAuthButton = document.getElementById('startAuth'); //biometric button
+const signInButton = document.getElementById('sign-in-button');
+const signOutButton = document.getElementById('sign-out-button');
+const signInContainer = document.getElementById('sign-in-container');
+const appContainer = document.getElementById('app-container');
+const aiChatButton = document.getElementById('aiChatBtn');
+const startAuthButton = document.getElementById('startAuth');
+const aiChatSection = document.getElementById('ai-chat');
 
-//to sign in with google account
-signInButtons.addEventListener('click', () => {
+// Sign in with Google
+signInButton.addEventListener('click', () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
         .then((result) => {
+            // User signed in successfully
             console.log(`Welcome ${result.user.displayName}`);
-            signInContainers.style.display = 'none';
+            // Show the app container and buttons
+            signInContainer.style.display = 'none';
             appContainer.style.display = 'block';
-            signOutButtons.style.display = 'block';
+            signOutButton.style.display = 'block';
             aiChatButton.style.display = 'block';
             startAuthButton.style.display = 'block';
         })
         .catch((error) => {
-            console.error('Error while signing in:', error);
+            console.error('Error during sign-in:', error);
         });
 });
 
-//this is the sign out functionality
-signOutButtons.addEventListener('click', () => {
-    signOut(auth)  //sign out logic
+aiChatButton.addEventListener('click', () => {
+    console.log('AI Chat button clicked');  // Debugging log
+    // Toggle AI chat section
+    if (aiChatSection.style.display === 'none' || aiChatSection.style.display === '') {
+        aiChatSection.style.display = 'block';
+    } else {
+        aiChatSection.style.display = 'none';
+    }
+});
+
+// Sign out
+signOutButton.addEventListener('click', () => {
+    signOut(auth)
         .then(() => {
             console.log('User signed out.');
-            appContainer.style.display = 'none'; 
-            signInContainers.style.display = 'block';
-            signOutButtons.style.display = 'none';
+            // Hide app and buttons, show sign-in
+            appContainer.style.display = 'none';
+            signInContainer.style.display = 'block';
+            signOutButton.style.display = 'none';
             aiChatButton.style.display = 'none';
             startAuthButton.style.display = 'none';
         })
@@ -58,18 +72,38 @@ signOutButtons.addEventListener('click', () => {
         });
 });
 
-onAuthStateChanged(auth, (user) => {  //it will change the auth states
+aiChatButton.addEventListener('click', () => {
+    console.log('AI Chat button clicked');  // Debugging log
+    if (!aiChatSection) {
+        console.log('aiChatSection is undefined or null');
+        return; // Early exit if element is not found
+    }
+    console.log(`Current display state: ${aiChatSection.style.display}`);
+    if (aiChatSection.style.display === 'none' || aiChatSection.style.display === '') {
+        aiChatSection.style.display = 'block';
+    } else {
+        aiChatSection.style.display = 'none';
+    }
+});
+
+
+// Monitor auth state
+onAuthStateChanged(auth, (user) => {
     if (user) {
-        signInContainers.style.display = 'none';
+        // User is signed in
+        console.log('User is signed in');
+        signInContainer.style.display = 'none';
         appContainer.style.display = 'block';
-        signOutButtons.style.display = 'block';
-        aiChatButton.style.display = 'block';
+        signOutButton.style.display = 'block';
+        aiChatButton.style.display = 'block'; // AI chat button shown
         startAuthButton.style.display = 'block';
     } else {
-        signInContainers.style.display = 'block';
+        console.log('No user signed in');
+        // No user is signed in
+        signInContainer.style.display = 'block';
         appContainer.style.display = 'none';
-        signOutButtons.style.display = 'none';
-        aiChatButton.style.display = 'none';
+        signOutButton.style.display = 'none';
+        aiChatButton.style.display = 'none'; // AI chat button hidden
         startAuthButton.style.display = 'none';
     }
 });
