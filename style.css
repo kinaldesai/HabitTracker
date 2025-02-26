@@ -2,47 +2,59 @@ body {
   font-family: "Great Vibes", cursive;
   margin: 0;
   padding: 0;
-  background: linear-gradient(to right, #ffffff, #4A0072 ); /* Gradient from pink to orange */
+  background: linear-gradient(to right, #ffffff, #4A0072);
 }
 
-#app {
-  max-width: 800px; /* maximum width of the application */
+/* application's css style */
+#app { 
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* habit tracker page css style */
 #habit-tracker {
   margin-bottom: 40px;
   font-family: 'Times New Roman', Times, serif;
 }
 
-#habitInput {           /* habit input */
+/* input habit css style */
+#habitInput {
   padding: 10px;
-  width: calc(100% - 100px);
+  width: calc(100% - 120px);
   margin-right: 10px;
   font-size: 16px;
-}
- 
-#addHabitButton {             /* add habit button styles */
-  padding: 10px;
-  font-size: 16px;
-  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-#habitList {                 /* habit list style */
+/* add habit button css */
+#addHabitButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* habit list */
+#habitList {
   margin-top: 20px;
 }
 
 .habit-item {
-  background-color: #fff;    /* habit item styles */
+  background-color: #fff;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
+/* button css style */
 button {
   background-color: #4CAF50;
   color: white;
@@ -58,29 +70,39 @@ button:hover {
 
 #error-message {
   color: red;
+  margin-top: 10px;
 }
 
+/* ai chat section css */
 #ai-chat {
   margin-top: 20px;
   background-color: #ffffffd9;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: none;
+  position: relative;
+  z-index: 10;
+  width: 100%;   
+  min-height: 100px; 
 }
 
+/* message container of AI css */
 .message-container {
   height: 100px;
-  overflow-y: auto; 
-  margin-bottom: 5px;
-  padding: 5px;
-  border-radius: 4px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  background: #f9f9f9;
 }
 
+/* send button of AI css */
 #sendButton {
   margin-top: 10px;
   padding: 10px;
   border: none;
-  border-top: 1px solid #ccc;
-  border-radius: 0 0 10px 0;
+  border-radius: 5px;
   background: #4a2cd1;
   color: #fff;
   cursor: pointer;
@@ -93,7 +115,7 @@ button:hover {
 
 h2 {
   text-align: center;
-  margin-bottom: 19px;
+  margin-bottom: 20px;
   color: #333;
 }
 
@@ -111,22 +133,24 @@ h2 {
 }
 
 #aiChatBtn {
-  bottom: 80px; 
+  bottom: 80px;
 }
 
 #aiChatBtn:hover, #startAuth:hover {
   background-color: #b30098;
 }
+
 #sign-in-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 50vh; 
+  height: 50vh;
   text-align: center;
 }
 
+/* sign in button css */
 #sign-in-button {
-  padding: 10px;
+  padding: 10px 20px;
   font-size: 14px;
   cursor: pointer;
   border-radius: 4px;
@@ -138,4 +162,3 @@ h2 {
 #sign-in-button:hover {
   background-color: #a0459e;
 }
-

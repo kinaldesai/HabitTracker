@@ -1,8 +1,8 @@
-// Import the necessary Firebase functions at the top level
+// Import the necessary Firebase functions 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js';
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js';
 
-// Your web app's Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDI3TMT4snKgdBPwce9ykKje-aZowdibDM",
     authDomain: "habittracker-e0f8c.firebaseapp.com",
@@ -17,93 +17,83 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// DOM Elements
-const signInButton = document.getElementById('sign-in-button');
-const signOutButton = document.getElementById('sign-out-button');
-const signInContainer = document.getElementById('sign-in-container');
-const appContainer = document.getElementById('app-container');
-const aiChatButton = document.getElementById('aiChatBtn');
-const startAuthButton = document.getElementById('startAuth');
-const aiChatSection = document.getElementById('ai-chat');
+// these are the DOM Elements
+const signInButton = document.getElementById('sign-in-button'); //sign in button
+const signOutButton = document.getElementById('sign-out-button'); //sign out button
+const signInContainer = document.getElementById('sign-in-container'); //sign in container
+const appContainer = document.getElementById('app-container'); //app container
+const aiChatButton = document.getElementById('aiChatBtn'); //ai chat button
+const startAuthButton = document.getElementById('startAuth'); //biometric button
+const aiChatSection = document.getElementById('ai-chat'); //ai chat section
 
-// Sign in with Google
+// Sign in with Google button
 signInButton.addEventListener('click', () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
         .then((result) => {
-            // User signed in successfully
             console.log(`Welcome ${result.user.displayName}`);
-            // Show the app container and buttons
-            signInContainer.style.display = 'none';
-            appContainer.style.display = 'block';
-            signOutButton.style.display = 'block';
-            aiChatButton.style.display = 'block';
-            startAuthButton.style.display = 'block';
+            showAuthenticatedUI();
         })
         .catch((error) => {
             console.error('Error during sign-in:', error);
         });
 });
 
-aiChatButton.addEventListener('click', () => {
-    console.log('AI Chat button clicked');  // Debugging log
-    // Toggle AI chat section
-    if (aiChatSection.style.display === 'none' || aiChatSection.style.display === '') {
-        aiChatSection.style.display = 'block';
-    } else {
-        aiChatSection.style.display = 'none';
-    }
-});
-
-// Sign out
+// Sign out button code
 signOutButton.addEventListener('click', () => {
     signOut(auth)
         .then(() => {
             console.log('User signed out.');
-            // Hide app and buttons, show sign-in
-            appContainer.style.display = 'none';
-            signInContainer.style.display = 'block';
-            signOutButton.style.display = 'none';
-            aiChatButton.style.display = 'none';
-            startAuthButton.style.display = 'none';
+            showUnauthenticatedUI();
         })
         .catch((error) => {
             console.error('Error during sign-out:', error);
         });
 });
 
-aiChatButton.addEventListener('click', () => {
-    console.log('AI Chat button clicked');  // Debugging log
+const sendButton = document.getElementById('send-button');
+
+sendButton.addEventListener('click', () => {
+    console.log('Send button clicked');
+    
     if (!aiChatSection) {
-        console.log('aiChatSection is undefined or null');
-        return; // Early exit if element is not found
+        console.error('aiChatSection is undefined or null');
+        return;
     }
-    console.log(`Current display state: ${aiChatSection.style.display}`);
-    if (aiChatSection.style.display === 'none' || aiChatSection.style.display === '') {
-        aiChatSection.style.display = 'block';
-    } else {
-        aiChatSection.style.display = 'none';
-    }
+    
+    const computedStyle = window.getComputedStyle(aiChatSection);
+    const isHidden = computedStyle.display === 'none';
+
+    console.log(`Before toggle: ${isHidden ? 'hidden' : 'visible'}`);
+
+    aiChatSection.style.display = isHidden ? 'block' : 'none'; //to show the AI chat
+    console.log(`AI Chat display toggled to: ${aiChatSection.style.display}`);
 });
 
-
-// Monitor auth state
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // User is signed in
         console.log('User is signed in');
-        signInContainer.style.display = 'none';
-        appContainer.style.display = 'block';
-        signOutButton.style.display = 'block';
-        aiChatButton.style.display = 'block'; // AI chat button shown
-        startAuthButton.style.display = 'block';
+        showAuthenticatedUI();
     } else {
         console.log('No user signed in');
-        // No user is signed in
-        signInContainer.style.display = 'block';
-        appContainer.style.display = 'none';
-        signOutButton.style.display = 'none';
-        aiChatButton.style.display = 'none'; // AI chat button hidden
-        startAuthButton.style.display = 'none';
+        showUnauthenticatedUI();
     }
 });
+
+// Show authenticated UI
+function showAuthenticatedUI() {
+    signInContainer.style.display = 'none'; //to see the sign in button
+    appContainer.style.display = 'block'; //app container
+    signOutButton.style.display = 'block'; //sign out button is blocked
+    aiChatButton.style.display = 'block'; //ai chat button is blocked
+    startAuthButton.style.display = 'block'; //biometric button is blocked
+}
+
+function showUnauthenticatedUI() {
+    signInContainer.style.display = 'block';
+    appContainer.style.display = 'none';
+    signOutButton.style.display = 'none';
+    aiChatButton.style.display = 'none';
+    startAuthButton.style.display = 'none';
+    aiChatSection.style.display = 'none'; 
+}

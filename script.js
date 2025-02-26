@@ -16,7 +16,7 @@ const firebaseConfig = {
   measurementId: "G-QD5WYJ4H8B"
 };
 
-// Initialize Firebase
+// this is to Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const habitsCollection = collection(db, "habits");
@@ -24,18 +24,33 @@ const habitsCollection = collection(db, "habits");
 let apiKey = "";
 let model = null;
 
-const addHabitButton = document.getElementById('addHabitButton');
-const habitInput = document.getElementById('habitInput');
-const habitList = document.getElementById('habitList');
-const emptyMessage = document.getElementById('emptyMessage');
+function initializeModel() {
+    console.log("Model initialized");
+}
 
-// Load habits and API key on page load
+document.addEventListener("DOMContentLoaded", () => {
+    initializeModel();
+});
+
+// these are the DOM Elements
+const addHabitButton = document.getElementById('addHabitButton'); //add habit button
+const habitInput = document.getElementById('habitInput'); //habit input variable
+const habitList = document.getElementById('habitList'); //habit list variable
+const emptyMessage = document.getElementById('emptyMessage'); //empty messages variable
+const aiChatButton = document.getElementById('aiChatBtn'); //ai chat button
+const aiChatSection = document.getElementById('ai-chat'); //ai chat section to see the chat
+const sendButton = document.getElementById('sendButton'); //send button of AI
+const messageInput = document.getElementById('userInput'); //message input
+const chatBox = document.getElementById('chatBox'); //chatbox for AI
+
 document.addEventListener("DOMContentLoaded", async () => {
     console.log('DOM is fully loaded');
     await loadAPIKey();
     await loadHabits();
+    initializeModel();
 });
 
+// Load API key from the firebase
 async function loadAPIKey() {
     try {
         const docRef = doc(db, "apikey", "googleai");
@@ -44,16 +59,17 @@ async function loadAPIKey() {
         if (docSnap.exists()) {
             apiKey = docSnap.data().key;
             const genAI = new GoogleGenerativeAI(apiKey);
-            model = genAI.getGenerativeModel({ model: "gemini-pro" });
+            model = genAI.getGenerativeModel({ model: "gemini 2.0 Flash" }); // Updated model version
+            console.log("AI Model initialized successfully.");
         } else {
-            console.error("API key is not found.");
+            console.error("API key is not found in Firestore.");
         }
     } catch (error) {
         console.error("Error while loading API key:", error);
     }
 }
 
-// Load habits from Firestore
+// to load the habits
 async function loadHabits() {
     try {
         habitList.innerHTML = "";
@@ -63,16 +79,15 @@ async function loadHabits() {
         } else {
             emptyMessage.style.display = "none";
             querySnapshot.forEach((doc) => {
-                const habitData = { id: doc.id, ...doc.data() };
-                addHabitToList(habitData);
+                addHabitToList({ id: doc.id, ...doc.data() });
             });
         }
     } catch (error) {
-        console.error("Error loading habits:", error);
+        console.error("Error while loading habits:", error);
     }
 }
 
-// Add Habit Event Listener
+// to add new habit
 addHabitButton.addEventListener("click", async () => {
     const habitText = habitInput.value.trim();
     if (habitText) {
@@ -81,7 +96,6 @@ addHabitButton.addEventListener("click", async () => {
     }
 });
 
-// Add habit to Firestore
 async function addHabitToFirestore(habitText) {
     try {
         const docRef = await addDoc(habitsCollection, { text: habitText, streak: 0 });
@@ -92,7 +106,6 @@ async function addHabitToFirestore(habitText) {
     }
 }
 
-// Add habit to the UI
 function addHabitToList(habit) {
     const { id, text, streak } = habit;
 
@@ -101,7 +114,7 @@ function addHabitToList(habit) {
     habitItem.setAttribute('data-id', id);
 
     habitItem.innerHTML = `
-        <span class="habit-name">${text}</span>
+        <span class="habit-name">${text}</span>  
         <button class="completeButton">Complete</button>
         <button class="editButton">Edit</button>
         <button class="removeButton">Remove</button>
@@ -119,8 +132,7 @@ async function completeHabit(id) {
     try {
         const habitItem = document.querySelector(`.habit-item[data-id='${id}']`);
         const streakElement = habitItem.querySelector('.streak');
-        let currentStreak = parseInt(streakElement.textContent.replace("Streak: ", ""));
-        currentStreak++;
+        let currentStreak = parseInt(streakElement.textContent.replace("Streak: ", "")) + 1;
 
         await updateDoc(doc(db, "habits", id), { streak: currentStreak });
         streakElement.textContent = `Streak: ${currentStreak}`;
@@ -133,7 +145,6 @@ async function completeHabit(id) {
     }
 }
 
-// Edit the habit
 async function editHabit(id) {
     try {
         const habitItem = document.querySelector(`.habit-item[data-id='${id}']`);
@@ -141,15 +152,14 @@ async function editHabit(id) {
         const newName = prompt("Edit your habit:", habitNameElement.textContent);
 
         if (newName && newName.trim()) {
-            habitNameElement.textContent = newName.trim();
             await updateDoc(doc(db, "habits", id), { text: newName.trim() });
+            habitNameElement.textContent = newName.trim();
         }
     } catch (error) {
         console.error("Error updating habit:", error);
     }
 }
 
-// Remove the habit
 async function removeHabit(id, habitItem) {
     try {
         if (confirm("Are you sure you want to remove this habit?")) {
@@ -158,35 +168,18 @@ async function removeHabit(id, habitItem) {
             checkEmpty();
         }
     } catch (error) {
-        console.error("Error removing habit:", error);
+        console.error("Error while removing habit:", error);
     }
 }
 
-// Check if habit list is empty
 function checkEmpty() {
-    if (habitList.children.length === 0) {
-        emptyMessage.style.display = "block";
-    } else {
-        emptyMessage.style.display = "none";
-    }
-}
-// Initialize the model 
-async function initializeModel() {
-    try {
-        console.log('AI model initialized.');
-    } catch (error) {
-        console.error('Error initializing AI model:', error);
-    }
+    emptyMessage.style.display = habitList.children.length === 0 ? "block" : "none";
 }
 
-// Fetch AI response 
+// Fetch AI response
 async function getAIResponse(userMessage) {
-    if (!model) {
-        return 'AI model not initialized.';
-    }
-
+    if (!model) return 'AI model not initialized.'; //error will show up if this is not initialized correctly
     try {
-        // Generate content 
         const result = await model.generateContent(userMessage);
         return result.response.text() || "Sorry, I didn’t understand that.";
     } catch (error) {
@@ -195,14 +188,14 @@ async function getAIResponse(userMessage) {
     }
 }
 
-// Initialize the model 
+// Initialize the model
 document.addEventListener("DOMContentLoaded", function () {
-    initializeModel(); 
+    initializeModel();
 
     const aiChatButton = document.getElementById('aiChatBtn');
     const aiChatSection = document.getElementById('ai-chat');
-    
-    aiChatSection.style.display = 'none';  
+
+    aiChatSection.style.display = 'none';
 
     aiChatButton.addEventListener('click', function () {
         if (aiChatSection.style.display === 'none' || aiChatSection.style.display === '') {
@@ -212,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Rest of your code for handling user messages and AI responses for the application
+    // for handling user messages and AI responses for the application
     const sendButton = document.getElementById('sendButton');
     const messageInput = document.getElementById('userInput');
     const chatBox = document.getElementById('chatBox');
@@ -234,10 +227,10 @@ document.addEventListener("DOMContentLoaded", function () {
         messageDiv.classList.add(sender === 'ai' ? 'ai-message' : 'user-message');
         messageDiv.textContent = `${sender === 'ai' ? 'AI' : 'You'}: ${message}`;
         chatBox.appendChild(messageDiv);
-        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom of the messages to AI
-    }
+        chatBox.scrollTop = chatBox.scrollHeight; 
+        }
 
-    function showToast(message, type) {
+    function showToast(message, type) {   //to see the notification
         const toast = document.createElement('div');
         toast.classList.add('toast', type);
         toast.textContent = message;
@@ -247,4 +240,3 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 3000);
     }
 });
-

@@ -1,0 +1,43 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  
+  pull_request:
+    branches:
+      - main  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v2  
+
+    - name: Set up Node.js (if needed)
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'  
+
+    - name: Install dependencies (if any)
+      run: |
+        npm install  # Installs any dependencies, such as Firebase SDK or AI-related packages
+      continue-on-error: true  # Continue even if there are no dependencies
+
+    - name: Build the app (if necessary)
+      run: |
+        npm run build  # Build the app if required (e.g., using Webpack, if applicable)
+      continue-on-error: true  
+
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages 
+        folder: .  
+        token: ${{ secrets.GITHUB_TOKEN }}  # Token for authentication 
+
+    - name: Clean up (Optional)
+      run: |
+        rm -rf node_modules 

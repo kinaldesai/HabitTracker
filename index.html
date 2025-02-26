@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Habit Tracker & AI Chat</title>
+    <title>Habit Tracker</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Add this link to the <head> section of your HTML -->
+   
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
@@ -17,16 +17,16 @@
     </div>
 
     <div id="app-container" style="display: none;">
-        <!-- Habit Tracker Section -->
+        <!-- Habit Tracker -->
         <section id="habit-tracker">
             <h1 id="habitTrackerTitle">Habit Tracker</h1>
             <input type="text" id="habitInput" placeholder="Add a new habit...">
             <button id="addHabitButton">Add Habit</button>
             <div id="habitList"></div>
-            <p id="emptyMessage" style="display: none;">No habits found. Start adding one!</p>
+            <p id="emptyMessage" style="display: none;">No habits found. Start adding!</p>
         </section>
 
-        <!-- AI Chat Section -->
+        <!-- AI Chat -->
         <section id="ai-chat" style="display: none;">
             <h2>Chat with AI</h2>
             <div id="chatBox" class="message-container">
@@ -37,16 +37,15 @@
         </section>
     </div>
 
-    <button id="sign-out-button" style="display: none;">Sign Out</button>
+    <button id="sign-out-button" style="display: none;">Sign Out</button> 
     <button id="aiChatBtn" class="ai-chat-btn" style="display: none;">AI Chat</button>
     <button id="startAuth" style="display: none;">Authenticate with Biometrics</button>
 
+    <script type="module" src="https://esm.run/@google/generative-ai"></script>
 
-    <!-- Firebase Scripts -->
     <script type="module" src="https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js"></script>
 
-    <!-- JavaScript Files -->
     <script type="module" src="sign-in.js"></script>
     <script type="module" src="script.js"></script>
     <script type="module" src="biometric.js"></script>
