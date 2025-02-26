@@ -4,7 +4,7 @@ The habit tracker application is a multifunctional web application that helps us
 # Features
 1. Habit Tracker: Add, edit, remove and manage daily habits.
 2. AI chat: Interactive AI interface.
-3. Secure Sign-in: Email and Password authentication.
+3. Secure Sign-in: sign in with google.
 4. Biometric Authentication: Verify user identity by authenticating fingerprint or face detection.
 5. Responsive Design: Fully responsive design and UI/UX and work seamlessly on various sizes of gadgets.
 
@@ -14,6 +14,8 @@ The habit tracker application is a multifunctional web application that helps us
     # 1.2 A Web Browser
 
 # Run the App
-Open index.html
+clone the repository first ad then open the index.html
 
-# 
+# Live site
+https://kinaldesai.github.io/HabitTracker/
+
